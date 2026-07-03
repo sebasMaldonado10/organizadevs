@@ -1,0 +1,8 @@
+# Variables de entorno
+.env
+
+#Ignora el entorno virtual
+enviroment/
+
+# Ignora la base de datos
+db.sqlite3
