@@ -21,6 +21,7 @@ class ProyectoSerializer(serializers.ModelSerializer):
             'id',
             'nombre',
             'descripcion',
+            'fecha_entrega',
             'materia',
             'estado',
             'creado_por',

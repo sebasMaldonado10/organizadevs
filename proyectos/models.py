@@ -16,6 +16,7 @@ class Proyecto(models.Model):
 
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(max_length=500, blank=True, null=True)
+    fecha_entrega = models.DateField(null=True, blank=True)
     materia = models.CharField(max_length=50)
     creado_por = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -72,7 +73,7 @@ class CategoriaLink(models.Model):
 class LinkProyecto(models.Model):
     proyecto = models.ForeignKey(
         Proyecto,
-        on_delete= models.PROTECT,
+        on_delete= models.CASCADE,
         related_name= 'links'
     )
     titulo = models.CharField(max_length=50)
