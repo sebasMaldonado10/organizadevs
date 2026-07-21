@@ -1,7 +1,7 @@
 # Aca vamos a serializar los datos
 
 from rest_framework import serializers
-from .models import LinkProyecto, CategoriaLink, MiembroProyecto, Proyecto
+from .models import LinkProyecto, CategoriaLink, MiembroProyecto, Proyecto, InvitacionProyecto
 
 class CategoriaLinkSerializer(serializers.ModelSerializer):
     class Meta:
@@ -59,4 +59,34 @@ class MiembroProyectoSerializer(serializers.ModelSerializer):
             'fecha_union'
         )
         read_only_fields = ('id', 'fecha_union')
+
+class InvitacionProyectoSerializer(serializers.ModelSerializer):
+    proyecto_nombre = serializers.CharField(source="proyecto.nombre", read_only=True)
+
+    class Meta:
+        model = InvitacionProyecto
+        fields = (
+            "id",
+            "proyecto",
+            "proyecto_nombre",
+            "codigo",
+            "creado_por",
+            "fecha_creacion",
+            "usada",
+            "usada_por",
+            "fecha_uso",
+        )
+        read_only_fields = (
+            "id",
+            "codigo",
+            "creado_por",
+            "fecha_creacion",
+            "usada",
+            "usada_por",
+            "fecha_uso",
+        )
+
+
+class AceptarInvitacionSerializer(serializers.Serializer):
+    codigo = serializers.CharField(max_length=10)
 

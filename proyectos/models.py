@@ -2,11 +2,11 @@ from django.db import models
 from django.conf import settings
 from usuarios.models import UsuarioPersonalizado
 
+# Para invitaciones
+import uuid
+from django.utils import timezone
+
 # Create your models here.
-
-from django.db import models
-from django.conf import settings
-
 
 class Proyecto(models.Model):
     class Estado(models.TextChoices):
@@ -93,3 +93,51 @@ class LinkProyecto(models.Model):
     
     def __str__(self):
         return f"Link {self.titulo}"
+
+# PARA INVITACIONES
+def generar_codigo_invitacion():
+    return uuid.uuid4().hex[:10].upper()
+
+
+class InvitacionProyecto(models.Model):
+    proyecto = models.ForeignKey(
+        Proyecto,
+        on_delete=models.CASCADE,
+        related_name="invitaciones"
+    )
+
+    codigo = models.CharField(
+        max_length=10,
+        unique=True,
+        default=generar_codigo_invitacion,
+        editable=False
+    )
+
+    creado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="invitaciones_creadas"
+    )
+
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    usada = models.BooleanField(default=False)
+
+    usada_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="invitaciones_usadas"
+    )
+
+    fecha_uso = models.DateTimeField(null=True, blank=True)
+
+    def marcar_como_usada(self, usuario):
+        self.usada = True
+        self.usada_por = usuario
+        self.fecha_uso = timezone.now()
+        self.save()
+
+    def __str__(self):
+        return f"Invitación {self.codigo} - {self.proyecto.nombre}"
