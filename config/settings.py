@@ -38,6 +38,11 @@ DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = []
 
+CORS_ALLOWED_ORIGINS = os.environ.get(
+    "CORS_ALLOWED_ORIGINS",
+    "http://localhost:3000,http://127.0.0.1:3000"
+).split(",")
+
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
